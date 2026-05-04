@@ -1,0 +1,4 @@
+[0] Fermer le programme
+[1] Afficher les enregistrements
+[2] Afficher un mot de passe
+[3] Effectuer une nouvelle entrer

@@ -59,7 +59,7 @@ def check_bd():
     # On récupère tout dans une variable
     tous_mes_comptes = cursor.fetchall()
 
-    print("")
+    print("\nVoici tout vos enregistrements")
     i = 0
     for ligne in tous_mes_comptes:
         print(f"[{i}]Site : {ligne[0]}, Login : {ligne[1]}")
@@ -76,13 +76,12 @@ def view_mdp():
 
 
 def main():
-    print("[0] Fermer le programme")
-    print("[1] Afficher les enregistrements")
-    print("[2] affcher un mot de passe")
-    print("[3] Effectuer une nouvelle entrer")
-    run = True
-    while run:
+    print("Taper 'help' pour afficher les actions disponibles")
+    while True:
         instruction = input("\nQue souhaitez vous faire: ")
+        print("")
+        if instruction == "help":
+            print(Path("help.txt").read_text(encoding="utf-8"))
         if instruction == "0":
             quit()
         if instruction == "1":
