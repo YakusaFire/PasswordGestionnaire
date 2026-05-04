@@ -53,20 +53,36 @@ def new_entry():
     connexion.commit()
 
 
-new_entry()
+def check_bd():
+    cursor.execute('SELECT service, login, mot_de_passe FROM identifiants')
+
+    # On récupère tout dans une variable
+    tous_mes_comptes = cursor.fetchall()
+
+    print("")
+    i = 0
+    for ligne in tous_mes_comptes:
+        print(f"[{i}]Site : {ligne[0]}, Login : {ligne[1]}")
+        i += 1
+
+    n = int(input("\nQuelle mot de passe afficher: "))
+    print(f"Votre mot de passe est: {cipher_suite.decrypt(tous_mes_comptes[n][2]).decode()}")
+    print("")
 
 
-cursor.execute('SELECT service, login, mot_de_passe FROM identifiants')
+def main():
+    print("[0] Fermer le programme")
+    print("[1] Afficher les enregistrements")
+    print("[2] Effectuer une nouvelle entrer")
+    run = True
+    while run:
+        instruction = input("\nQue souhaitez vous faire: ")
+        if instruction == "0":
+            quit()
+        if instruction == "1":
+            check_bd()
+        if instruction == "2":
+            new_entry()
 
-# On récupère tout dans une variable
-tous_mes_comptes = cursor.fetchall()
-
-print("")
-i = 0
-for ligne in tous_mes_comptes:
-    print(f"[{i}]Site : {ligne[0]}, Login : {ligne[1]}")
-    i += 1
-
-print("Quelle mot de passe afficher")
-n = int(input("Entrez la ligne du mot de passe voulu: "))
-print(cipher_suite.decrypt(tous_mes_comptes[n][2]))
+main()
+connexion.close()
