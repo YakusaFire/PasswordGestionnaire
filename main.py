@@ -65,15 +65,21 @@ def check_bd():
         print(f"[{i}]Site : {ligne[0]}, Login : {ligne[1]}")
         i += 1
 
+def view_mdp():
+    cursor.execute('SELECT service, login, mot_de_passe FROM identifiants')
+    tous_mes_comptes = cursor.fetchall()
+
     n = int(input("\nQuelle mot de passe afficher: "))
     print(f"Votre mot de passe est: {cipher_suite.decrypt(tous_mes_comptes[n][2]).decode()}")
     print("")
 
 
+
 def main():
     print("[0] Fermer le programme")
     print("[1] Afficher les enregistrements")
-    print("[2] Effectuer une nouvelle entrer")
+    print("[2] affcher un mot de passe")
+    print("[3] Effectuer une nouvelle entrer")
     run = True
     while run:
         instruction = input("\nQue souhaitez vous faire: ")
@@ -82,6 +88,8 @@ def main():
         if instruction == "1":
             check_bd()
         if instruction == "2":
+            view_mdp()
+        if instruction == "3":
             new_entry()
 
 main()
