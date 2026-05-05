@@ -41,7 +41,6 @@ cursor.execute('''
 ''')
 
 
-
 def test_mdp():
     cursor.execute('SELECT service, login, mot_de_passe FROM identifiants')
     tous_mes_comptes = cursor.fetchall()
@@ -144,6 +143,6 @@ def main():
             suppr_mdp(int(input("Ligne a supprimer: ")))
 
 
-
-main()
-connexion.close()
+if __name__ == "__main__":
+    main()
+    connexion.close()
