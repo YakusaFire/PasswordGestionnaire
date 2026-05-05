@@ -1,6 +1,6 @@
 # PasswordGestionnaire
 
-Librairie necessaire:
+Librairies necessaire:
     
     cryptography
     getpass

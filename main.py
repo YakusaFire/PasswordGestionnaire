@@ -23,7 +23,8 @@ def generer_cle_depuis_mdp(mdp_maitre):
 
 
 # Utilisation
-mdp_saisi = input("Entrez votre mot de passe maître : ")
+
+mdp_saisi = getpass.getpass("Entrer votre mot de passe: ")
 cipher_suite = generer_cle_depuis_mdp(mdp_saisi)
 
 connexion = sqlite3.connect('coffre_fort.db')
@@ -38,6 +39,23 @@ cursor.execute('''
         mot_de_passe BLOB NOT NULL
     )
 ''')
+
+
+
+def test_mdp():
+    cursor.execute('SELECT service, login, mot_de_passe FROM identifiants')
+    tous_mes_comptes = cursor.fetchall()
+
+    if len(tous_mes_comptes) == 0:
+        return True
+
+    try:
+        cipher_suite.decrypt(tous_mes_comptes[0][2]).decode()
+        print("Mot de passe corect")
+    except:
+        print("Le mot de passe est faux")
+        connexion.close()
+        quit()
 
 
 def new_entry():
@@ -80,7 +98,8 @@ def view_mdp():
     if n == "hub":
         print("Vous êtes de retour sur le menu principal")
         return
-    print(f"Sur {tous_mes_comptes[n][0]}, avec votre login:{tous_mes_comptes[n][1]}, votre mot de passe est: {cipher_suite.decrypt(tous_mes_comptes[n][2]).decode()}")
+
+    print(f"Sur {tous_mes_comptes[n][0]}, avec votre login: {tous_mes_comptes[n][1]}, votre mot de passe est: {cipher_suite.decrypt(tous_mes_comptes[n][2]).decode()}")
     print("")
     print("---")
 
@@ -105,6 +124,8 @@ def suppr_mdp(ligne):
 
 
 def main():
+    if Path("coffre_fort.db").is_file():
+        test_mdp()
     print("Taper 'help' pour afficher les actions disponibles")
     while True:
         instruction = input("\nQue souhaitez vous faire: ")
