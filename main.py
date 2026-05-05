@@ -23,7 +23,7 @@ def generer_cle_depuis_mdp(mdp_maitre):
 
 
 # Utilisation
-mdp_saisi = input("Entrez votre mot de passe maître : ")
+mdp_saisi = input("Entrer votre mot de passe maître : ")
 cipher_suite = generer_cle_depuis_mdp(mdp_saisi)
 
 connexion = sqlite3.connect('coffre_fort.db')
