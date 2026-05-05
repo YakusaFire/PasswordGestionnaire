@@ -3,24 +3,28 @@ from pathlib import Path
 # import hashlib
 import sqlite3
 from cryptography.fernet import Fernet
-
-path_key = Path("key.key")
-
-if not path_key.is_file():
-    key = Fernet.generate_key()
-
-    # Crée le fichier et écrit la clé dedans
-    with open("key.key", "wb") as key_file:
-        key_file.write(key)
-
-    print("Fichier key.key généré avec succès !")
-
-else:
-    key = open("key.key", "rb").read()
+from cryptography.hazmat.primitives import hashes
+from cryptography.hazmat.primitives.kdf.pbkdf2 import PBKDF2HMAC
+import base64
 
 
-cipher_suite = Fernet(key)
+def generer_cle_depuis_mdp(mdp_maitre):
+    mdp_bytes = mdp_maitre.encode()
+    salt = b'un_sel_fixe_de_16_octets'  # Idéalement, stocke ce sel en base de données
 
+    kdf = PBKDF2HMAC(
+        algorithm=hashes.SHA256(),
+        length=32,
+        salt=salt,
+        iterations=100000,
+    )
+    cle = base64.urlsafe_b64encode(kdf.derive(mdp_bytes))
+    return Fernet(cle)
+
+
+# Utilisation
+mdp_saisi = input("Entrez votre mot de passe maître : ")
+cipher_suite = generer_cle_depuis_mdp(mdp_saisi)
 
 connexion = sqlite3.connect('coffre_fort.db')
 cursor = connexion.cursor()
@@ -108,7 +112,7 @@ def main():
         if instruction == "help":
             print(Path("help.txt").read_text(encoding="utf-8"))
         if instruction == "0":
-            quit()
+            break
         if instruction == "1":
             check_bd()
         if instruction == "2":
