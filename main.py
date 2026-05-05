@@ -10,7 +10,7 @@ import base64
 
 def generer_cle_depuis_mdp(mdp_maitre):
     mdp_bytes = mdp_maitre.encode()
-    salt = b'un_sel_fixe_de_16_octets'  # Idéalement, stocke ce sel en base de données
+    salt = b'c7a87bfd85c64cc26f432633b745029e'  # Idéalement, stocke ce sel en base de données
 
     kdf = PBKDF2HMAC(
         algorithm=hashes.SHA256(),
