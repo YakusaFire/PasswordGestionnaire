@@ -54,6 +54,7 @@ def new_entry():
 
 
 def check_bd():
+    print("---")
     cursor.execute('SELECT service, login, mot_de_passe FROM identifiants')
 
     # On récupère tout dans une variable
@@ -64,6 +65,7 @@ def check_bd():
     for ligne in tous_mes_comptes:
         print(f"[{i}]Site : {ligne[0]}, Login : {ligne[1]}")
         i += 1
+    print("---")
 
 def view_mdp():
     print("---")
@@ -79,20 +81,22 @@ def view_mdp():
     print("---")
 
 
-def suppr_mdp(nom_service):
+def suppr_mdp(ligne):
     print("---")
-    if nom_service == "hub":
+    if ligne == "hub":
         print("Vous êtes de retour sur le menu principal")
         return
 
-    cursor.execute('''DELETE FROM identifiants WHERE service = ?''', (nom_service,))
+    cursor.execute('SELECT service, login, mot_de_passe FROM identifiants')
+    tous_mes_comptes = cursor.fetchall()
+    cursor.execute('''DELETE FROM identifiants WHERE service = ?''', (tous_mes_comptes[ligne][0],))
 
     connexion.commit()
 
     if cursor.rowcount > 0:
-        print(f"Le service {nom_service} a été supprimer avec succès")
+        print(f"Le service {tous_mes_comptes[ligne][0]} a été supprimer avec succès")
     else:
-        print(f"Le service {nom_service} n'existe pas")
+        print(f"Le service {tous_mes_comptes[ligne][0]} n'existe pas")
     print("---")
 
 
@@ -112,7 +116,7 @@ def main():
         if instruction == "3":
             new_entry()
         if instruction == "4":
-            suppr_mdp(input("Service à supprimer: "))
+            suppr_mdp(int(input("Ligne a supprimer: ")))
 
 
 
