@@ -66,13 +66,34 @@ def check_bd():
         i += 1
 
 def view_mdp():
+    print("---")
     cursor.execute('SELECT service, login, mot_de_passe FROM identifiants')
     tous_mes_comptes = cursor.fetchall()
 
     n = int(input("\nQuelle mot de passe afficher: "))
-    print(f"Votre mot de passe est: {cipher_suite.decrypt(tous_mes_comptes[n][2]).decode()}")
+    if n == "hub":
+        print("Vous êtes de retour sur le menu principal")
+        return
+    print(f"Sur {tous_mes_comptes[n][0]}, avec votre login:{tous_mes_comptes[n][1]}, votre mot de passe est: {cipher_suite.decrypt(tous_mes_comptes[n][2]).decode()}")
     print("")
+    print("---")
 
+
+def suppr_mdp(nom_service):
+    print("---")
+    if nom_service == "hub":
+        print("Vous êtes de retour sur le menu principal")
+        return
+
+    cursor.execute('''DELETE FROM identifiants WHERE service = ?''', (nom_service,))
+
+    connexion.commit()
+
+    if cursor.rowcount > 0:
+        print(f"Le service {nom_service} a été supprimer avec succès")
+    else:
+        print(f"Le service {nom_service} n'existe pas")
+    print("---")
 
 
 def main():
@@ -90,6 +111,10 @@ def main():
             view_mdp()
         if instruction == "3":
             new_entry()
+        if instruction == "4":
+            suppr_mdp(input("Service à supprimer: "))
+
+
 
 main()
 connexion.close()
