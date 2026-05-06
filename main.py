@@ -1,11 +1,10 @@
+import base64
 import getpass
-from pathlib import Path
-# import hashlib
 import sqlite3
+from pathlib import Path
 from cryptography.fernet import Fernet
 from cryptography.hazmat.primitives import hashes
 from cryptography.hazmat.primitives.kdf.pbkdf2 import PBKDF2HMAC
-import base64
 
 
 def generer_cle_depuis_mdp(mdp_maitre):
@@ -50,7 +49,7 @@ def test_mdp():
 
     try:
         cipher_suite.decrypt(tous_mes_comptes[0][2]).decode()
-        print("Mot de passe corect")
+        print("Mot de passe correct")
     except:
         print("Le mot de passe est faux")
         connexion.close()
@@ -74,7 +73,7 @@ def new_entry():
     connexion.commit()
 
 
-def check_bd():
+def check_db():
     print("---")
     cursor.execute('SELECT service, login, mot_de_passe FROM identifiants')
 
@@ -94,7 +93,7 @@ def view_mdp():
     tous_mes_comptes = cursor.fetchall()
 
     n = int(input("\nQuelle mot de passe afficher: "))
-    if n == "hub":
+    if str(n) == "hub":
         print("Vous êtes de retour sur le menu principal")
         return
 
@@ -103,9 +102,11 @@ def view_mdp():
     print("---")
 
 
-def suppr_mdp(ligne):
+def suppr_mdp():
     print("---")
-    if ligne == "hub":
+    check_db()
+    ligne = int(input("Ligne a supprimer: "))
+    if str(ligne) == "hub":
         print("Vous êtes de retour sur le menu principal")
         return
 
@@ -123,8 +124,7 @@ def suppr_mdp(ligne):
 
 
 def main():
-    if Path("coffre_fort.db").is_file():
-        test_mdp()
+    test_mdp()
     print("Taper 'help' pour afficher les actions disponibles")
     while True:
         instruction = input("\nQue souhaitez vous faire: ")
@@ -134,13 +134,13 @@ def main():
         if instruction == "0":
             break
         if instruction == "1":
-            check_bd()
+            check_db()
         if instruction == "2":
             view_mdp()
         if instruction == "3":
             new_entry()
         if instruction == "4":
-            suppr_mdp(int(input("Ligne a supprimer: ")))
+            suppr_mdp()
 
 
 if __name__ == "__main__":

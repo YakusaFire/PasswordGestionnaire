@@ -6,4 +6,4 @@ Librairies necessaire:
     getpass
 
 
-Application permettant de stocker ses mot de passe de manière sécurisé
+Application permettant de stocker des mots de passe de manière sécurisé
