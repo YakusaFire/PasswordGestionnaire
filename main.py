@@ -14,7 +14,7 @@ def generer_cle_depuis_mdp(mdp_maitre):
     :return:
     """
     mdp_bytes = mdp_maitre.encode()
-    salt = b'c7a87bfd85c64cc26f432633b745029e'  # Idéalement, stocke ce sel en base de données
+    salt = b'c7a87bfd85c64cc26f432633b745029e'
 
     kdf = PBKDF2HMAC(
         algorithm=hashes.SHA256(),
