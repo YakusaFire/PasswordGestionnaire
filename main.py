@@ -8,6 +8,11 @@ from cryptography.hazmat.primitives.kdf.pbkdf2 import PBKDF2HMAC
 
 
 def generer_cle_depuis_mdp(mdp_maitre):
+    """
+    Permet de généré la clé en fonction du mot de passe maître
+    :param mdp_maitre:
+    :return:
+    """
     mdp_bytes = mdp_maitre.encode()
     salt = b'c7a87bfd85c64cc26f432633b745029e'  # Idéalement, stocke ce sel en base de données
 
@@ -21,15 +26,13 @@ def generer_cle_depuis_mdp(mdp_maitre):
     return Fernet(cle)
 
 
-# Utilisation
-
 mdp_saisi = getpass.getpass("Entrer votre mot de passe: ")
 cipher_suite = generer_cle_depuis_mdp(mdp_saisi)
 
+# Création de la base de donnée
 connexion = sqlite3.connect('coffre_fort.db')
 cursor = connexion.cursor()
 
-# Création de la table pour stocker les identifiants
 cursor.execute('''
     CREATE TABLE IF NOT EXISTS identifiants (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -41,6 +44,10 @@ cursor.execute('''
 
 
 def test_mdp():
+    """
+    Permet de vérifier que le mot de passe saisie correspond à celui qui a crypté les mots de passe
+    :return bool:
+    """
     cursor.execute('SELECT service, login, mot_de_passe FROM identifiants')
     tous_mes_comptes = cursor.fetchall()
 
@@ -57,6 +64,10 @@ def test_mdp():
 
 
 def new_entry():
+    """
+    Permet d'ajouter un enregistrement à la base de données
+    :return:
+    """
 
     SERVICE = input("Entrer le service pour le quelle vous voulez enregistrer votre mot de passe: ")
 
@@ -74,6 +85,10 @@ def new_entry():
 
 
 def check_db():
+    """
+    Liste tous les enregistrements présents dans la table
+    :return:
+    """
     print("---")
     cursor.execute('SELECT service, login, mot_de_passe FROM identifiants')
 
@@ -88,6 +103,10 @@ def check_db():
     print("---")
 
 def view_mdp():
+    """
+    Permet d'afficher un mot de passe a l'aide de la clée de cryptage
+    :return:
+    """
     print("---")
     cursor.execute('SELECT service, login, mot_de_passe FROM identifiants')
     tous_mes_comptes = cursor.fetchall()
@@ -103,6 +122,10 @@ def view_mdp():
 
 
 def suppr_mdp():
+    """
+    Permet de supprimer un enregistrement
+    :return:
+    """
     print("---")
     check_db()
     ligne = int(input("Ligne a supprimer: "))
@@ -124,6 +147,10 @@ def suppr_mdp():
 
 
 def main():
+    """
+    Programme principal qui met en œuvre les méthode associé à la gestion de la table
+    :return:
+    """
     test_mdp()
     print("Taper 'help' pour afficher les actions disponibles")
     while True:
